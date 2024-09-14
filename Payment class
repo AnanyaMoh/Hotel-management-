@@ -1,0 +1,14 @@
+package HotelReservationSystem;
+
+public class Payment {
+    public static boolean processPayment(String cardNumber, double amount) {
+        // Simulate payment processing
+        if (cardNumber.length() == 16) {
+            System.out.println("Payment of $" + amount + " was successful.");
+            return true;
+        } else {
+            System.out.println("Payment failed. Invalid card number.");
+            return false;
+        }
+    }
+}
