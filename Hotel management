@@ -1,0 +1,251 @@
+package HotelReservationSystem;
+
+public class Payment {
+    public static boolean processPayment(String cardNumber, double amount) {
+        // Simulate payment processing
+        if (cardNumber.length() == 16) {
+            System.out.println("Payment of $" + amount + " was successful.");
+            return true;
+        } else {
+            System.out.println("Payment failed. Invalid card number.");
+            return false;
+        }
+    }
+}
+package HotelReservationSystem;
+
+public class Room {
+    private int roomNumber;
+    private String type;
+    private double price;
+    private boolean isAvailable;
+
+    public Room(int roomNumber, String type, double price, boolean isAvailable) {
+        this.roomNumber = roomNumber;
+        this.type = type;
+        this.price = price;
+        this.isAvailable = isAvailable;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "roomNumber=" + roomNumber +
+                ", type='" + type + '\'' +
+                ", price=" + price +
+                ", isAvailable=" + isAvailable +
+                '}';
+    }
+}
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+
+public class HotelManagement {
+private static List<Room> rooms = new ArrayList<>();
+private static List<Reservation> reservations = new ArrayList<>();
+private static int reservationCounter = 1;
+
+public static void main(String[] args) {
+    initializeRooms();
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.println("Welcome to the Hotel Reservation System!");
+    while (true) {
+        System.out.println("1. Search for available rooms");
+        System.out.println("2. Make a reservation");
+        System.out.println("3. View reservations");
+        System.out.println("4. Exit");
+        System.out.print("Enter your choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();  // Consume newline
+
+        switch (choice) {
+            case 1:
+                searchRooms(scanner);
+                break;
+            case 2:
+                makeReservation(scanner);
+                break;
+            case 3:
+                viewReservations();
+                break;
+            case 4:
+                System.out.println("Thank you for using the Hotel Reservation System!");
+                return;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+        }
+    }
+}
+
+// Initialize some rooms
+private static void initializeRooms() {
+    rooms.add(new Room(101, "Standard", 100.00, true));
+    rooms.add(new Room(102, "Deluxe", 150.00, true));
+    rooms.add(new Room(103, "Suite", 250.00, true));
+    rooms.add(new Room(104, "Standard", 100.00, true));
+    rooms.add(new Room(105, "Deluxe", 150.00, true));
+}
+
+// Search for available rooms based on type
+private static void searchRooms(Scanner scanner) {
+    System.out.print("Enter room type (Standard/Deluxe/Suite): ");
+    String type = scanner.nextLine();
+    boolean found = false;
+
+    for (Room room : rooms) {
+        if (room.getType().equalsIgnoreCase(type) && room.isAvailable()) {
+            System.out.println(room);
+            found = true;
+        }
+    }
+
+    if (!found) {
+        System.out.println("No available rooms of type " + type);
+    }
+}
+
+// Make a reservation
+private static void makeReservation(Scanner scanner) {
+    System.out.print("Enter your name: ");
+    String name = scanner.nextLine();
+    System.out.print("Enter your email: ");
+    String email = scanner.nextLine();
+    User user = new User(name, email);
+
+    System.out.print("Enter room type (Standard/Deluxe/Suite): ");
+    String type = scanner.nextLine();
+    Room selectedRoom = null;
+
+    for (Room room : rooms) {
+        if (room.getType().equalsIgnoreCase(type) && room.isAvailable()) {
+            selectedRoom = room;
+            break;
+        }
+    }
+
+    if (selectedRoom == null) {
+        System.out.println("No available rooms of type " + type);
+        return;
+    }
+
+    System.out.print("Enter check-in date (dd/mm/yyyy): ");
+    String checkInDateStr = scanner.nextLine();
+    System.out.print("Enter check-out date (dd/mm/yyyy): ");
+    String checkOutDateStr = scanner.nextLine();
+
+    System.out.print("Enter card number (16 digits): ");
+    String cardNumber = scanner.nextLine();
+
+    if (Payment.processPayment(cardNumber, selectedRoom.getPrice())) {
+        selectedRoom.setAvailable(false);
+        Reservation reservation = new Reservation(reservationCounter++, user.getName(), selectedRoom, new Date(), new Date());
+        reservations.add(reservation);
+        System.out.println("Reservation successful! Your reservation ID is: " + reservation.getReservationId());
+    } else {
+        System.out.println("Payment failed. Reservation not completed.");
+    }
+}
+
+// View all reservations
+private static void viewReservations() {
+    if (reservations.isEmpty()) {
+        System.out.println("No reservations found.");
+    } else {
+        for (Reservation reservation : reservations) {
+            System.out.println(reservation);
+        }
+    }
+}
+// Seond class Reservation
+package HotelReservationSystem;
+
+import java.util.Date;
+
+public class Reservation {
+    private int reservationId;
+    private String customerName;
+    private Room room;
+    private Date checkInDate;
+    private Date checkOutDate;
+
+    public Reservation(int reservationId, String customerName, Room room, Date checkInDate, Date checkOutDate) {
+        this.reservationId = reservationId;
+        this.customerName = customerName;
+        this.room = room;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+    }
+
+    public int getReservationId() {
+        return reservationId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public Date getCheckInDate() {
+        return checkInDate;
+    }
+
+    public Date getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "reservationId=" + reservationId +
+                ", customerName='" + customerName + '\'' +
+                ", room=" + room +
+                ", checkInDate=" + checkInDate +
+                ", checkOutDate=" + checkOutDate +
+                '}';
+    }
+}
+package HotelReservationSystem;
+
+public class User {
+    private String name;
+    private String email;
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+}
