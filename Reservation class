@@ -1,0 +1,51 @@
+// Seond class Reservation
+package HotelReservationSystem;
+
+import java.util.Date;
+
+public class Reservation {
+    private int reservationId;
+    private String customerName;
+    private Room room;
+    private Date checkInDate;
+    private Date checkOutDate;
+
+    public Reservation(int reservationId, String customerName, Room room, Date checkInDate, Date checkOutDate) {
+        this.reservationId = reservationId;
+        this.customerName = customerName;
+        this.room = room;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+    }
+
+    public int getReservationId() {
+        return reservationId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public Date getCheckInDate() {
+        return checkInDate;
+    }
+
+    public Date getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "reservationId=" + reservationId +
+                ", customerName='" + customerName + '\'' +
+                ", room=" + room +
+                ", checkInDate=" + checkInDate +
+                ", checkOutDate=" + checkOutDate +
+                '}';
+    }
+}
